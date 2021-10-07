@@ -10,6 +10,7 @@ function navigate(location)
 	%				{'-s', '-save'} 	: saves the current directory statically
 	%				{'-h', '-hotswap'}	: navigates to the saved directory, (if any.)
 	%				{'-r', '-rewind'} 	: goes back to the previously navigated
+	%				{'-erase'}					: clear persistent memory.
 	%										directory on the previous function call.
 	%
 	% Errors Thrown:
