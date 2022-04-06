@@ -1,20 +1,21 @@
 function y = ggdrnd(mu, sigma, beta, n)
 %GGDRND generates random samples from the GGD.
+%   Y = RANDGGD(MU, SIGMA, BETA, N) returns an array of random numbers from
+%   the GGD distribution with location parameter MU, variation parameter
+%   SIGMA, and shape parameter BETA.
 %
-%   Y = RANDGGD(MU, SIGMA, BETA, N)
-%     Y (double) is a [1xN] vector of random samples.
-%     MU (scalar) is the location parameter.
-%     SIGMA (scalar) is the variation parameter.
-%     BETA (scalar) is the shape parameter.
-%     N (scalar) are the number of samples to generate.
+%   The scale parameter alpha is computed based on the variance equation,
+%   since variance and shape are provided.
 %
+%   Y = GGDRND(MU, SIGMA, BETA, N) returns a 1-by-N array.
+% 
+% See Also GAMRND, GAMMA
+
 % References:
 %   [1] Gonzalez-Farias, G., Molina, J. A. D., & Rodríguez-Dagnino, 
 %       R. M. (2009). Efficiency of the approximated shape parameter 
 %       estimator in the generalized Gaussian distribution. IEEE 
 %       Transactions on Vehicular Technology, 58(8), 4214-4223.
-%
-% See Also: GAMRND, GAMMA
 
 if (isinf(beta) || (beta <= 0))
     error('ggdrnd:InvalidShape', ...
