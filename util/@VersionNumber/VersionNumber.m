@@ -13,11 +13,11 @@ classdef VersionNumber
 
 
     properties(SetAccess = private, GetAccess = public)
-        major = uint32(0);
-        minor = uint32(0);
-        patch = uint32(0);
-        prerelease = '';
-        build = '';
+        major uint32 = uint32(0);
+        minor uint32 = uint32(0);
+        patch uint32 = uint32(0);
+        prerelease char = '';
+        build char = '';
     end
 
     properties(Constant)
@@ -49,7 +49,7 @@ classdef VersionNumber
                 if (~all(isstrprop(val, 'digit')) || ~isinteger(sscanf(val, '%i')))
                     error('Version must be non-negative integer values.');
                 end
-                newval = sscanf(val, '%i');
+                newval = uint32(sscanf(val, '%i'));
             else
                 error('Unknown input type ''%s''. Input must be a numeric or string.', class(val));
             end
@@ -302,15 +302,15 @@ classdef VersionNumber
 
         function obj = set.major(obj, val)
             val = convertStringsToChars(val);
-            obj.major = obj.convert_version(val);
+            obj.major = obj.convert_version(char(val));
         end
         function obj = set.minor(obj, val)
             val = convertStringsToChars(val);
-            obj.minor = obj.convert_version(val);
+            obj.minor = obj.convert_version(char(val));
         end
         function obj = set.patch(obj, val)
             val = convertStringsToChars(val);
-            obj.patch = obj.convert_version(val);
+            obj.patch = obj.convert_version(char(val));
         end
         function obj = set.prerelease(obj, val)
             val = convertStringsToChars(val);
