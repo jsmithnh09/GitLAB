@@ -9,8 +9,7 @@ classdef VersionNumber
     % likely will be used for denoting toolbox types, i.e. alpha, beta, 
     % stable, branches, etc.
     %
-    % For more information, go to <a href 
-    % ="matlab:web('https://semver.org/', '-browser')">The page.</a>
+    % For more information, go to <a href ="matlab:web('https://semver.org/', '-browser')">The version page.</a>
 
 
     properties(SetAccess = private, GetAccess = public)
@@ -163,7 +162,7 @@ classdef VersionNumber
         function obj = VersionNumber(version)
             % VersionNumber constructor.
             if (nargin > 0)
-                if (isa(version, 'VersionNumber'))
+                if (isa(version, 'SemVers'))
                     obj = version;
                 else
                     obj.v_str = version;
@@ -203,9 +202,9 @@ classdef VersionNumber
             % See Also: NEXTMINOR, NEXTPATCH
 
             val = obj;
-            val.major = uint32(val.major + 1);
-            val.minor = uint32(0);
-            val.patch = uint32(0);
+            val.major = val.major + 1;
+            val.minor = 0;
+            val.patch = 0;
         end
 
         function val = nextminor(obj)
@@ -216,8 +215,8 @@ classdef VersionNumber
             % See Also: NEXTMINOR, NEXTPATCH
 
             val = obj;
-            val.minor = uint32(val.minor + 1);
-            val.patch = uint32(0);
+            val.minor = val.minor + 1;
+            val.patch = 0;
         end
 
         function val = nextpatch(obj)
@@ -228,7 +227,7 @@ classdef VersionNumber
             % See Also: NEXTMAJOR, NEXTMINOR
 
             val = obj;
-            val.patch = uint32(val.patch + 1);
+            val.patch = val.patch + 1;
         end
 
         function disp(obj)
@@ -299,7 +298,6 @@ classdef VersionNumber
             %   4: X == A, Y == B, Z == C, pre1 < pre2
 
             % instead of layered-if like in Julia, we'll use logical short-circuiting.
-            if ischar(x), x = VersionNumber(x); end
             flag = ((obj.major < x.major) || ...
                 (obj.major == x.major && obj.minor < x.minor) || ...
                 (obj.major == x.major && obj.minor == x.minor && obj.patch < x.patch) || ...
@@ -311,15 +309,15 @@ classdef VersionNumber
 
         function obj = set.major(obj, val)
             val = convertStringsToChars(val);
-            obj.major = obj.convert_version(val);
+            obj.major = obj.convert_version(char(val));
         end
         function obj = set.minor(obj, val)
             val = convertStringsToChars(val);
-            obj.minor = obj.convert_version(val);
+            obj.minor = obj.convert_version(char(val));
         end
         function obj = set.patch(obj, val)
             val = convertStringsToChars(val);
-            obj.patch = obj.convert_version(val);
+            obj.patch = obj.convert_version(char(val));
         end
         function obj = set.prerelease(obj, val)
             val = convertStringsToChars(val);
@@ -345,9 +343,12 @@ classdef VersionNumber
             if (ntoks < 3)
                 error('Version numbers must have at least <MAJOR>.<MINOR>.<PATCH> format.');
             end
-            obj.major = uint32(sscanf(tokens{1}, '%i'));
-            obj.minor = uint32(sscanf(tokens{2}, '%i'));
-            obj.patch = uint32(sscanf(tokens{3}, '%i'));
+            obj.major = tokens{1};
+            if isempty(tokens{2}), tokens{2} = '0'; end
+            if isempty(tokens{3})
+
+
+            obj.patch = tokens{3};
             if (ntoks > 3) && ~isempty(tokens{4})
                 % strip hyphen guard in <...>-<PRERELEASE>+<BUILD>
                 obj.prerelease = tokens{4}(2:end);
