@@ -1,7 +1,7 @@
-classdef VersionNumber
-    % VERSIONNUMBER follows Semantic Versioning 2.0
+classdef semver
+    % semver follows Semantic Versioning 2.0
     %
-    %   OBJ = VERSIONNUMBER(STR) returns a version object of the form:
+    %   OBJ = semver(STR) returns a version object of the form:
     %       <MAJOR>.<MINOR>.<PATCH>-[PRERELEASE]+[BUILD]
     %
     % Since MATLAB does not have direct CI/CD management or the need for 
@@ -67,7 +67,7 @@ classdef VersionNumber
             if ~ischar(val)
                 error('Input pre-release must be a valid string.');
             end
-            match = regexp(val, VersionNumber.RE_PRE, 'match', 'once');
+            match = regexp(val, semver.RE_PRE, 'match', 'once');
             if (~strcmp(match, val))
                 error('Input consists of 1+ dot-separated/hyphenated alphanumeric identifiers.')
             end
@@ -84,7 +84,7 @@ classdef VersionNumber
             if ~ischar(val)
                 error('Input pre-release must be a valid string.');
             end
-            match = regexp(val, VersionNumber.RE_BUILD, 'match', 'once');
+            match = regexp(val, semver.RE_BUILD, 'match', 'once');
             if (~strcmp(match, val))
                 error('Input consists of 1+ dot-separated/hyphenated alphanumeric identifiers.')
             end
@@ -103,10 +103,10 @@ classdef VersionNumber
             %
             % See rule #11-4 in the Semantic Versioning 2.0 docs.
 
-            if isa(x, 'VersionNumber'), x = char(x); end
-            if isa(y, 'VersionNumber'), y = char(y); end
-            x = VersionNumber.convert_prerelease(x);
-            y = VersionNumber.convert_prerelease(y);
+            if isa(x, 'semver'), x = char(x); end
+            if isa(y, 'semver'), y = char(y); end
+            x = semver.convert_prerelease(x);
+            y = semver.convert_prerelease(y);
             flag = false;
             if (strcmp(x, y))
                 return;
@@ -155,15 +155,15 @@ classdef VersionNumber
             %
             % See Also: PRERELEASE_LT
 
-            flag = VersionNumber.prerelease_lt(y, x);
+            flag = semver.prerelease_lt(y, x);
         end
     end
 
     methods
-        function obj = VersionNumber(version)
-            % VersionNumber constructor.
+        function obj = semver(version)
+            % semver constructor.
             if (nargin > 0)
-                if (isa(version, 'VersionNumber'))
+                if (isa(version, 'semver'))
                     obj = version;
                 else
                     obj.v_str = version;
@@ -266,27 +266,27 @@ classdef VersionNumber
         %%% COMPARISON METHODS %%%
         function flag = eq(obj, x)
             % EQ equal to (==).
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = isequal(obj, x);
         end
         function flag = ne(obj, x)
             % NE not equal to (~=).
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = ~isequal(obj, x);
         end
         function flag = ge(obj, x)
             % GE greater than or equal to (>=).
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = (eq(obj, x) | gt(obj, x));
         end
         function flag = gt(obj, x)
             % GT greater than (>).
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = ~le(obj, x);
         end
         function flag = le(obj, x)
             % LE less than or equal to (<=).
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = (eq(obj, x) | lt(obj, x));
         end
         function flag = lt(obj, x)
@@ -299,7 +299,7 @@ classdef VersionNumber
             %   4: X == A, Y == B, Z == C, pre1 < pre2
 
             % instead of layered-if like in Julia, we'll use logical short-circuiting.
-            if ischar(x), x = VersionNumber(x); end
+            if ischar(x), x = semver(x); end
             flag = ((obj.major < x.major) || ...
                 (obj.major == x.major && obj.minor < x.minor) || ...
                 (obj.major == x.major && obj.minor == x.minor && obj.patch < x.patch) || ...
@@ -334,7 +334,7 @@ classdef VersionNumber
             % SET.V_STR sets the entire version string.
             %
             %   OBJ = SET.V_STR(OBJ, VAL)
-            %       OBJ (VersionNumber) is the version number.
+            %       OBJ (semver) is the version number.
             %       VAL (char) is the new version number to assign.
             %
             % See Also: REGEXP

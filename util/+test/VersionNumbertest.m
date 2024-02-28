@@ -14,9 +14,9 @@ for fIdx = 1:size(fdata, 1)
     if (input(end) == newline) || (input(end) == char(13))
         input = input(1:end-1);
     end
-    vnum = VersionNumber(input);
+    vnum = semver(input);
     assert(strcmp(vnum.v_str, input), ...
-        "Malformed VersionNumber string using case on line %d.", fIdx);
+        "Malformed semversion string using case on line %d.", fIdx);
 end
 
 % FAIL...test that they fail to construct.
@@ -28,7 +28,7 @@ for fIdx = 1:size(fdata, 1)
     end
     failure = false;
     try
-        vnum = VersionNumber(input);
+        vnum = semver(input);
     catch
         failure = true;
     end

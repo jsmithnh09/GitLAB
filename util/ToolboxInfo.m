@@ -5,12 +5,12 @@ classdef ToolboxInfo
     %   including info on the remote source code and installation, (namely
     %   dependencies and path alterations.)
     %
-    % See Also: VERSIONNUMBER
+    % See Also: SEMVER
     
     properties
         name char                 % filename valid unique title.
         title char                % more-descript string of the toolbox.
-        version VersionNumber     % the software version #.
+        version semver            % the software version #.
         paths cell                % sub-paths that ought to be added.
         deps cell                 % other pkg's the tbx. is reliant on.
         url char                  % the remote source URL.
@@ -39,7 +39,7 @@ classdef ToolboxInfo
 
             % initialize the state.
             [obj.name, obj.title, obj.url, obj.branch] = deal('');
-            obj.version = VersionNumber('0.0.1');
+            obj.version = semver('0.0.1');
             obj.uuid    = char(javaMethod('toString', java.util.UUID.randomUUID));
             obj.deps    = {''};
             obj.exclude = {''};
@@ -85,7 +85,7 @@ classdef ToolboxInfo
                                 error('Title must be a string < 70 characters.');
                             end
                         case 'version'
-                            kval = VersionNumber(kval);
+                            kval = semver(kval);
                         case {'exclude', 'deps', 'paths'}
                             if ischar(kval)
                                 kval = {kval};
@@ -119,9 +119,9 @@ classdef ToolboxInfo
             %    OBJ (ToolboxInfo) is the toolbox data.
             %    VSTR (char) is the new verison-compliant string.
             %
-            % See Also: VERSIONNUMBER
+            % See Also: SEMVER
 
-            if isa(vstr, 'VersionNumber')
+            if isa(vstr, 'semver')
                 vstr = char(vstr);
             end
             if (~ischar(vstr))
@@ -135,7 +135,7 @@ classdef ToolboxInfo
                 case 'patch'
                     obj.version = nextpatch(obj.version);
                 otherwise
-                    obj.version = VersionNumber(vstr);
+                    obj.version = semver(vstr);
             end % v_str
         end
 

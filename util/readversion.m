@@ -7,7 +7,7 @@ function v = readversion(fpath)
 %   V = READVERSION(FILEPATH)
 %    FILEPATH (char) is a filepath to a file to read.
 %
-% See Also: VERSIONNUMBER
+% See Also: SEMVER
 
 if (nargin < 1) || (~ischar(fpath))
     error('At least one input argument was expected.');
@@ -24,7 +24,7 @@ if isfile(fpath)
     end
 else
     % perform the string parsing.
-    match = regexp(fpath, VersionNumber.RE_TOKENS, 'tokens');
+    match = regexp(fpath, semver.RE_TOKENS, 'tokens');
     if isempty(match)
         error('No semvers compliant string was found.');
     else
@@ -36,7 +36,7 @@ else
         if (~isempty(build))
             vstr = strcat(vstr, build);
         end
-        v = VersionNumber(vstr);
+        v = semver(vstr);
     end
 end
 
